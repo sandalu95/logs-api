@@ -1,6 +1,7 @@
-// load up the express framework and body-parser helper
+// load up the express framework, body-parser helper and cors
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 // create an instance of express to serve end points
 const app = express();
@@ -13,6 +14,7 @@ const fs = require('fs');
 // including handling JSON data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 // this is the place to handle various routes from
 const routes = require('./routes/routes.js')(app, fs);

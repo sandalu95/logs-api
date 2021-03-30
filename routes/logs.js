@@ -1,5 +1,10 @@
 const _ = require("lodash");
 
+const loadTypes = {
+    prev:"PREV",
+    next:"NEXT"
+}
+
 const logRoutes = (app, fs) => {
     const dataPath = './data/logsData.json';
 
@@ -24,17 +29,19 @@ const logRoutes = (app, fs) => {
             const startDateTime = req.body.startDateTime;
             const endDateTime = req.body.endDateTime;
             const dataLimit = req.body.dataLimit;
+            const loadType = req.body.loadType;
 
             const parsed = JSON.parse(data);
             const sorted = _.sortBy(parsed,'timestamp');
 
-            const valueArr = [];
-
+            let valueArr = [];
             sorted.forEach(value=>{
-                if(valueArr.length<dataLimit && new Date(value.timestamp)>new Date(startDateTime) && new Date(value.timestamp)<new Date(endDateTime) ) {
+                if(new Date(value.timestamp)>new Date(startDateTime) && new Date(value.timestamp)<new Date(endDateTime) ) {
                     valueArr.push(value);
                 }
             })
+            valueArr = loadType===loadTypes.next?valueArr.slice(0,dataLimit):valueArr.slice(-dataLimit);
+
             res.status(200).send(valueArr);
         });
     });
