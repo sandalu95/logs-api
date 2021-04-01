@@ -35,8 +35,9 @@ const logRoutes = (app, fs) => {
             const sorted = _.sortBy(parsed,'timestamp');
 
             let valueArr = [];
-            sorted.forEach(value=>{
+            sorted.forEach((value, index)=>{
                 if(new Date(value.timestamp)>new Date(startDateTime) && new Date(value.timestamp)<new Date(endDateTime) ) {
+                    value.id = index+1;
                     valueArr.push(value);
                 }
             })
