@@ -46,6 +46,32 @@ const logRoutes = (app, fs) => {
             res.status(200).send(valueArr);
         });
     });
+
+    //To get logs within given id range
+    app.post('/logsByIds', (req, res) => {
+        fs.readFile(dataPath, 'utf8', (err, data) => {
+            if (err) {
+                throw err;
+            }
+
+            const startId = req.body.startId;
+            const endId = req.body.endId;
+            const dataLimit = req.body.dataLimit;
+            const loadType = req.body.loadType;
+
+            const parsed = JSON.parse(data);
+
+            let valueArr = [];
+            parsed.forEach((value)=>{
+                if(value.id>startId && value.id<endId ) {
+                    valueArr.push(value);
+                }
+            })
+            valueArr = loadType===loadTypes.next?valueArr.slice(0,dataLimit):valueArr.slice(-dataLimit);
+
+            res.status(200).send(valueArr);
+        });
+    });
 };
 
 module.exports = logRoutes;
